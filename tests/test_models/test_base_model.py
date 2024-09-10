@@ -1,88 +1,62 @@
 #!/usr/bin/python3
-"""
-Module for BaseModel unittest
-"""
-import os
 import unittest
+import time
 from models.base_model import BaseModel
 
 
-
-class TestBasemodel(unittest.TestCase):
-    """
-    Unittest for BaseModel
-    """
+class TestBaseModel(unittest.TestCase):
+    """Test cases for BaseModel class."""
 
     def setUp(self):
-        """
-        Setup for temporary file path
-        """
-        try:
-            os.rename("file.json", "tmp.json")
-        except FileNotFoundError:
-            pass
+        self.testModel = BaseModel()
 
+    # tear down
     def tearDown(self):
-        """
-        Tear down for temporary file path
-        """
-        try:
-            os.remove("file.json")
-        except FileNotFoundError:
-            pass
-        try:
-            os.rename("tmp.json", "file.json")
-        except FileNotFoundError:
-            pass
-    def test_init(self):
-        """
-        Test for init
-        """
-        my_model = BaseModel()
-
-        self.assertIsNotNone(my_model.id)
-        self.assertIsNotNone(my_model.created_at)
-        self.assertIsNotNone(my_model.updated_at)
+        del self.testModel
 
     def test_save(self):
-        """
-        Test for save method
-        """
-        my_model = BaseModel()
+        baseModel = BaseModel()
+        updated_at_before_save = baseModel.updated_at
+        time.sleep(0.5)
+        baseModel.save()
+        updated_at_after_save = baseModel.updated_at
+        self.assertNotEqual(baseModel.updated_at, baseModel.created_at)
+        self.assertNotEqual(updated_at_before_save, updated_at_after_save)
 
-        initial_updated_at = my_model.updated_at
+    # test BaseModel before and after clling save method
+    def test_save_before_save(self):
+        self.assertEqual(self.testModel.updated_at,
+                         self.testModel.created_at)
+    # test BaseModel before and after clling save method
 
-        current_updated_at = my_model.save()
+    def test_save_after_save(self):
+        self.testModel.save()
+        self.assertNotEqual(self.testModel.updated_at,
+                            self.testModel.created_at)
 
-        self.assertNotEqual(initial_updated_at, current_updated_at)
+    # test BaseModel to_dict method return type
+    def test_to_dict_return(self):
+        testModel_dict = self.testModel.to_dict()
+        self.assertIsInstance(testModel_dict, dict)
 
-    def test_to_dict(self):
-        """
-        Test for to_dict method
-        """
-        my_model = BaseModel()
+    # test BaseModel to_dict method for it's content.
+    def test_to_dict_value(self):
+        testModel_dict = self.testModel.to_dict()
+        self.assertIn('__class__', testModel_dict)
 
-        my_model_dict = my_model.to_dict()
+    # test BaseModel to_dict method if it's content has the correct types
+    def test_to_dict_content_type(self):
+        testModel_dict = self.testModel.to_dict()
+        self.assertIsInstance(testModel_dict.get('created_at'), str)
+        self.assertIsInstance(testModel_dict.get('created_at'), str)
 
-        self.assertIsInstance(my_model_dict, dict)
-
-        self.assertEqual(my_model_dict["__class__"], 'BaseModel')
-        self.assertEqual(my_model_dict['id'], my_model.id)
-        self.assertEqual(my_model_dict['created_at'], my_model.created_at.isoformat())
-        self.assertEqual(my_model_dict["updated_at"], my_model.created_at.isoformat())
-
-
-    def test_str(self):
-        """
-        Test for string representation
-        """
-        my_model = BaseModel()
-
-        self.assertTrue(str(my_model).startswith('[BaseModel]'))
-
-        self.assertIn(my_model.id, str(my_model))
-
-        self.assertIn(str(my_model.__dict__), str(my_model))
+    # test string value of BaseModel
+    def test__str__(self):
+        class_name = self.testModel.__class__.__name__
+        id = self.testModel.id
+        dict_v = self.testModel.__dict__
+        self.assertEqual(str(self.testModel),
+                         f"[{class_name}] ({id}) {dict_v}")
 
 
 if __name__ == "__main__":

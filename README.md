@@ -1,99 +1,81 @@
-# AirBnB_clone
-The AirBnB clone utilizes higher level programming skills to deploy a copy of the AirBnB website.
+<h1 align="center">ALU-AirBnB clone</h1>
 
-## Web Static
-The web static starts building the front end of the AirBnB clone website through simple HTML static pages and style guides.
 
-## Console
-The console is a command interpreter that manages all AirBnB objects.
+## Description
 
-### Using the Console
+ALU-AirBnB is a full-stack Web application built from scratch which comprize a command interpreter, a web interface, API and database. The goal of the project is to build a replica of the [Airbnb Website](https://www.airbnb.com/) and deploy it on server. The project is built using Python, HTML, CSS, Javascript, MySQL and SQLAlchemy. The final version of this project will have:
 
-#### Interactive Mode
-##### Starting on Interactive Mode
-Run `./console.py`to begin a session.
+- A command interpreter to manipulate data without a visual interface, like a shell (for development and debugging)
+- A website (front-end) with static and dynamic functionalities
+- A comprehensive database to manage the backend functionalities
+- An API that provides a communication interface between the front and backend of the system.
 
-A prompt `(hbnb)` should appear where you can type commands followed by a new line.
-After the command is run, you will be reprompted.
-Empty lines also reprompt the user.
-Type `help` to get a list of available commands.
-Type `quit` to end the session.
-```
+
+## Project Architecture
+
+The project is divided into different pieces. Here is a diagram of the project architecture:
+
+![Project Architecture](./project_architecture.png)
+
+## Files and Directories
+- [```models```](./models/) directory will contain all classes used for the entire project. A class, called “model” in a OOP project is the representation of an object/instance.
+- [```tests```](./tests) directory will contain all unit tests.
+- [```console.py```](./console.py) file is the entry point of the command interpreter.
+- [```models/base_model.py```](./models/base_model.py) file is the base class of all models. It contains common elements:
+    - attributes: ```id```, ```created_at``` and ```updated_at```
+    - methods: ```save()``` and ```to_json()```
+- [```models/engine```](./models/engine/) directory contains all storage classes (using the same prototype). Currently it contains: ```file_storage.py``` file.
+
+
+## Description of the command interpreter
+| Commands  | Description |
+| ------------- | ------------- |
+| ```quit```  | Quits the console  |
+| ```Ctrl+D```  | Quits the console  |
+| ```help``` or ```help <command>```  | Displays all commands or Displays instructions for a specific command
+| ```create <class>```  | Creates an object of type , saves it to a JSON file, and prints the objects ID
+| ```show <class> <ID>```  | Shows string representation of an object
+| ```destroy <class> <ID>```  | Deletes an objects
+| ```all or all <class>```  | Prints all string representations of all objects or Prints all string representations of all objects of a specific class
+| ```update <class> <id> <attribute name> "<attribute value>"```  | Updates an object with a certain attribute (new or existing)
+| ```<class>.all()```  | Same as all ```<class>```
+| ```<class>.count()```  | Retrieves the number of objects of a certain class
+| ```<class>.show(<ID>)```  | Same as show ```<class> <ID>```
+| ```<class>.destroy(<ID>)```  | Same as destroy ```<class> <ID>```
+| ```<class>.update(<ID>, <attribute name>, <attribute value>```  | Same as update ```<class> <ID> <attribute name> <attribute value>```
+| ```<class>.update(<ID>, <dictionary representation>)```  | Updates an objects based on a dictionary representation of attribute names and values
+
+
+### Interactive mode (example)
+
+```bash
 $ ./console.py
 (hbnb) help
-
 Documented commands (type help <topic>):
 ========================================
-EOF  help  quit
-
+EOF  all  create  destroy  help  q  quit  show  update
 (hbnb)
 (hbnb)
 (hbnb) quit
-```
-
-#### Non-Interactive Mode
-You can also use the console non-interactively.
-##### Starting by using "echo"
-You can "pipe" an input into the command by using `echo`, as seen below:
-```
-$ echo "help" | ./console.py
-(hbnb)
-
-Documented commands (type help <topic>):
-========================================
-EOF  help  quit
-(hbnb)
-```
-##### Starting with a file of commands
-You can also pipe in a file with one command per line, as seen below:
-```
-$ cat test_help
-help
 $
-$ cat test_help | ./console.py
-(hbnb)
-
-Documented commands (type help <topic>):
-========================================
-EOF  help  quit
-(hbnb)
 ```
-### Console Commands
-Typing `help <command>` or `?<command>` will print information on how to utilize each command.
 
-Below is a brief description of each command:
-|                    command                    |                                                description                                                |
-|:---------------------------------------------:|:---------------------------------------------------------------------------------------------------------:|
-|                `all` or `all <class>`             | Prints all existing objects.  If class_name is specified, prints all existing objects of that class |
-|              `create <class>`              |                                    Creates a new instance of class_name                                   |
-|         `show <class> <id>`         |                            Prints the string representation of the instance by class_name with ID object_id                            |
-| `update <class> <id> <attr_name> <attr_val>` |          Update the attribute attr_name with value attr_val for instance of class_name with ID id         |
-|            `destroy <cls_name> <id>`            |                                   Delete instance of cls_name with ID id                                  |
-|                      `quit`                     |                                              Exit the console                                             |
-|                      `EOF`                      |                                              Exit the console                                             |
+## Tests
 
-Some commands can also be run by calling on the class directly:
-|                    command                    |                                                description                                                |
-|:---------------------------------------------:|:---------------------------------------------------------------------------------------------------------:|
-|                `<class>.all()`             | Prints all existing objects of that class name |
-|              `<class>.count()`              |                                    Counts all existing objects of that class                                   |
-|         `<class>.show("<id>")`         |       Prints the string representation of the instance by class_name with ID object_id                            |
-| `<class>.update("<id>", "<attr_name>", "<attr_val>")` |          Update the attribute attr_name with value attr_val for instance of class_name with ID id         |
-|            `<class>.update("<id>", {'<attr_name1>': '<attr_val1>', '<attr_name2>': '<attr_val2>'})`            |                                   Updates multiple attributes with key/value pairs for instance of class_name with ID id using dictionary representation         |
-|            `<cls_name>.destroy("<id>")`            |                                   Delete instance of cls_name with ID id                                  |
+Unittests for the this project are defined in the [tests](./tests)
+directory. To run the entire test suite simultaneously, execute the following command:
 
-### Available Classes
-The console works with the following classes to manage AirBnB objects:
 ```
-User
-Review
-City
-Place
-State
-Amenity
+$ python3 -m unittest discover tests
 ```
-All objects are accessed via storage, an instance of the FileStorage Class, for the above commands to be run.
-FileStorage Class manages the dictionary of all objects as well as serialization/deserialization of objects to JSON file.
 
-### Questions, Comments, Sugestions
-If you have questions or suggestions, contact James Jok Dut Akuei at j.akuei@alustudent.com or Gloria Utumoni at g.umutoni2@alustudent.com
+Alternatively, you can specify a single test file to run at a time:
+
+```
+$ python3 -m unittest tests/test_models/test_base_model.py
+```
+
+## Authors
+
+* [**James Jok Dut Akuei** ](https://github.com/JamesJokDutAkuei)
+* [**Gloria Umutoni** ](https://github.com/gloriaumutoni)
